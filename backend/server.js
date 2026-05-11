@@ -1,11 +1,9 @@
 import express from 'express';
-import morgan from 'morgan';
 
 const app = express();
 const PORT = 4000;
 
 // Middleware
-app.use(morgan('dev'));
 app.use(express.json());
 
 // Dummy API Endpoints
@@ -17,7 +15,8 @@ app.get('/api/users', (req, res) => {
         data: [
             { id: 1, name: 'Raj Kumar', email: 'raj@example.com' },
             { id: 2, name: 'Priya Sharma', email: 'priya@example.com' },
-            { id: 3, name: 'Arjun Singh', email: 'arjun@example.com' }
+            { id: 3, name: 'Arjun Singh', email: 'arjun@example.com' },
+            { id: 4, name: 'Sneha Patel', email: 'sneha@example.com' }
         ]
     });
 });
