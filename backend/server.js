@@ -1,88 +1,39 @@
 import express from 'express';
+import path from 'path';
+import { fileURLToPath } from 'url';
 
 const app = express();
 const PORT = 4000;
 
+// recreate __dirname
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 // Middleware
 app.use(express.json());
+app.use(express.static("public"));
 
-// Dummy API Endpoints
 
-// GET /api/users - Get all users
+// API Routes
+
 app.get('/api/users', (req, res) => {
     res.json({
         success: true,
         data: [
             { id: 1, name: 'Raj Kumar', email: 'raj@example.com' },
-            { id: 2, name: 'Priya Sharma', email: 'priya@example.com' },
-            { id: 3, name: 'Arjun Singh', email: 'arjun@example.com' },
-            { id: 4, name: 'Sneha Patel', email: 'sneha@example.com' }
+            { id: 2, name: 'Priya Sharma', email: 'priya@example.com' }
         ]
     });
 });
 
-// GET /api/users/:id - Get user by ID
-app.get('/api/users/:id', (req, res) => {
-    const userId = parseInt(req.params.id);
-    res.json({
-        success: true,
-        data: {
-            id: userId,
-            name: 'User ' + userId,
-            email: `user${userId}@example.com`
-        }
-    });
+
+// React catch-all route
+app.get('/*splat', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
-// POST /api/users - Create a new user
-app.post('/api/users', (req, res) => {
-    const { name, email } = req.body;
-    res.status(201).json({
-        success: true,
-        message: 'User created successfully',
-        data: {
-            id: 4,
-            name: name || 'New User',
-            email: email || 'newuser@example.com'
-        }
-    });
-});
-
-// GET /api/posts - Get all posts
-app.get('/api/posts', (req, res) => {
-    res.json({
-        success: true,
-        data: [
-            { id: 1, title: 'First Post', content: 'This is the first post', userId: 1 },
-            { id: 2, title: 'Second Post', content: 'This is the second post', userId: 2 }
-        ]
-    });
-});
-
-// GET /api/health - Health check
-app.get('/api/health', (req, res) => {
-    res.json({
-        status: 'OK',
-        timestamp: new Date().toISOString()
-    });
-});
-
-// Root endpoint
-app.get('/', (req, res) => {
-    res.json({
-        message: 'Welcome to the API',
-        endpoints: {
-            health: 'GET /api/health',
-            users: 'GET /api/users',
-            userById: 'GET /api/users/:id',
-            createUser: 'POST /api/users',
-            posts: 'GET /api/posts'
-        }
-    });
-});
 
 // Start server
 app.listen(PORT, () => {
     console.log(`Server running on http://localhost:${PORT}`);
-    console.log(`Health check: http://localhost:${PORT}/api/health`);
 });
